@@ -18,7 +18,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
 	def process_config(self, config):
 		""" Tweak strategy based on config and perform any initial algo setup """
-		gamelib.debug_write('Configuring your custom algo strategy...')
+		gamelib.debug_write('shu config')
 
 		self.config = config
 
@@ -30,7 +30,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 		unit deployments, and transmitting your intended deployments to the
 		game engine.
 		"""
-		gamelib.debug_write('Performing turn {} of your custom algo strategy'.format(game_map.turn_number))
+		gamelib.debug_write('shu turn {}'.format(game_map.turn_number))
 
 		self.starter_strategy(game_map)  # replace with your own strategy
 
@@ -45,18 +45,14 @@ class AlgoStrategy(gamelib.AlgoCore):
 			self.build_defences(game_map)
 			self.deploy_attackers(game_map)
 
-	#On turn one, we make the C1 Logo!
 	def turn_one_defences(self, game_map):
-		#Make our letter C
-		tower_locations = [[8, 11], [9, 11], [7,10], [7, 9], [7, 8], [8, 7], [9, 7]]
+		tower_locations = [[ 0,13],[ 1,12],[ 2,11],[ 3,10],[ 4,9],[ 5,8],[ 6,7],[ 7,6],[ 8,5],[ 9,4],[10,3],[11,2]]
 		game_map.attempt_spawn_multiple("FF", tower_locations)
 		
-		#Make our number 1
-		tower_locations = [[17, 11], [18, 11], [18, 10], [18, 9], [18, 8], [17, 7], [18, 7], [19,7]]
+		tower_locations = [[27,13],[26,12],[25,11],[24,10],[23,9],[22,8],[21,7],[20,6],[19,5],[18,4],[17,3],[16,2]]
 		game_map.attempt_spawn_multiple("FF", tower_locations)
 
-		#Build our 3 dots
-		tower_locations = [[11, 7], [13, 9], [15, 11]]
+		tower_locations = [[10, 9],[17, 9]]
 		game_map.attempt_spawn_multiple("DF", tower_locations)
 
 	def build_defences(self, game_map):
