@@ -3,47 +3,23 @@ import random
 import math
 from sys import maxsize
 
-
-"""
-You are able to implement your own algo by subclassing the `AlgoCore` class and
-overriding the methods `process_config(config_string)` and `step(game_map)`.
-Most of the algo code you write will be in this file unless you create new
-modules yourself.
-"""
-
 class AlgoStrategy(gamelib.AlgoCore):
 	def __init__(self):
 		super().__init__()
 		random.seed()
 
 	def process_config(self, config):
-		""" Tweak strategy based on config and perform any initial algo setup """
 		gamelib.debug_write('shu config')
-
 		self.config = config
 
 	def step(self, game_map):
-		"""
-		This step function is called every turn with the game state wrapper as
-		an argument. The wrapper stores the state of the arena and has methods
-		for querying its state, allocating your current resources as planned
-		unit deployments, and transmitting your intended deployments to the
-		game engine.
-		"""
 		gamelib.debug_write('shu turn {}'.format(game_map.turn_number))
-
-		self.starter_strategy(game_map)  # replace with your own strategy
-
-		game_map.send_messages()
-
-	# NOTE: all the methods after this point are part of the sample funnel strategy
-	def starter_strategy(self, game_map):
-		first_turn = game_map.turn_number == 0
-		if first_turn:
+		if game_map.turn_number == 0:
 			self.turn_one_defences(game_map)
 		else:
 			self.build_defences(game_map)
 			self.deploy_attackers(game_map)
+		game_map.send_messages()
 
 	def turn_one_defences(self, game_map):
 		tower_locations = [[ 0,13],[ 1,12],[ 2,11],[ 3,10],[ 4,9],[ 5,8],[ 6,7],[ 7,6],[ 8,5],[ 9,4],[10,3],[11,2]]
