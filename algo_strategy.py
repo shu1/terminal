@@ -23,40 +23,8 @@ class AlgoStrategy(gamelib.AlgoCore):
 			game_map.attempt_spawn_multiple("DF", AlgoStrategy.f1s)
 		game_map.attempt_spawn_multiple("DF", AlgoStrategy.f2s)
 		game_map.attempt_spawn_multiple("EF", AlgoStrategy.f3s)
-#		self.build_defences(game_map)
 		self.deploy_attackers(game_map)
 		game_map.send_messages()
-
-	def build_defences(self, game_map):
-		#Choose to spend a random amount of cores
-		starting_cores = game_map.get_resource('cores')
-		cores_to_spend = random.randint(0, math.floor(starting_cores))
-
-		#Get all locations on the bottom half of the map
-		all_locations = [[0, 0]]
-		for i in range(game_map.arena_size):
-			for j in range(math.floor(game_map.arena_size / 2)):
-				all_locations.append([i, j])
-		possible_locations = game_map.filter_blocked_locations(all_locations)
-
-		#While we still want to spend more cores, build a random firewall
-		while cores_to_spend >= 1.5 and len(possible_locations) > 0:
-			location_index = random.randint(0, len(possible_locations) - 1)
-			build_location = possible_locations[location_index]
-			possible_locations.remove(build_location)
-
-			firewall_number = random.randint(1, 3)
-			if firewall_number == 1 or cores_to_spend < 6:
-				cores_to_spend -= 1.5
-				firewall_to_build = "FF"
-			elif firewall_number == 2 or cores_to_spend < 8:
-				cores_to_spend -= 6
-				firewall_to_build = "DF"
-			else:
-				cores_to_spend -= 8
-				firewall_to_build = "EF"
-
-			game_map.attempt_spawn(firewall_to_build, build_location)
 
 	def deploy_attackers(self, game_map):
 		#Get some variebles we will use
