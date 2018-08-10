@@ -21,8 +21,8 @@ class AlgoStrategy(gamelib.AlgoCore):
 		else:
 			game_map.attempt_spawn_multiple("DF", AlgoStrategy.wall_locations)
 			game_map.attempt_spawn_multiple("FF", AlgoStrategy.wall_locations)
-			self.build_defences(game_map)
-			self.deploy_attackers(game_map)
+		self.build_defences(game_map)
+		self.deploy_attackers(game_map)
 		game_map.send_messages()
 
 	def build_defences(self, game_map):
