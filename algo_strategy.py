@@ -12,24 +12,18 @@ class AlgoStrategy(gamelib.AlgoCore):
 		gamelib.debug_write('shu config')
 		self.config = config
 
+	wall_locations = [[11,2],[16,2],[0,13],[27,13],[10,3],[17,3],[1,12],[26,12],[9,4],[18,4],[2,11],[25,11],[8,5],[19,5],[3,10],[24,10],[7,6],[20,6],[4,9],[23,9],[6,7],[21,7],[5,8],[22,8]]
 	def step(self, game_map):
 		gamelib.debug_write('shu turn {}'.format(game_map.turn_number))
 		if game_map.turn_number == 0:
-			self.turn_one_defences(game_map)
+			game_map.attempt_spawn_multiple("DF", [[12,5],[15,5]])
+			game_map.attempt_spawn_multiple("FF", AlgoStrategy.wall_locations)
 		else:
+			game_map.attempt_spawn_multiple("DF", AlgoStrategy.wall_locations)
+			game_map.attempt_spawn_multiple("FF", AlgoStrategy.wall_locations)
 			self.build_defences(game_map)
 			self.deploy_attackers(game_map)
 		game_map.send_messages()
-
-	def turn_one_defences(self, game_map):
-		tower_locations = [[ 0,13],[ 1,12],[ 2,11],[ 3,10],[ 4,9],[ 5,8],[ 6,7],[ 7,6],[ 8,5],[ 9,4],[10,3],[11,2]]
-		game_map.attempt_spawn_multiple("FF", tower_locations)
-		
-		tower_locations = [[27,13],[26,12],[25,11],[24,10],[23,9],[22,8],[21,7],[20,6],[19,5],[18,4],[17,3],[16,2]]
-		game_map.attempt_spawn_multiple("FF", tower_locations)
-
-		tower_locations = [[10, 9],[17, 9]]
-		game_map.attempt_spawn_multiple("DF", tower_locations)
 
 	def build_defences(self, game_map):
 		#Choose to spend a random amount of cores
