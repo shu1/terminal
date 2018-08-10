@@ -19,8 +19,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 		gamelib.debug_write('shu turn {}'.format(game_map.turn_number))
 		if game_map.turn_number == 0:
 			game_map.attempt_spawn_multiple("FF", AlgoStrategy.f1s)
-		else:
-			game_map.attempt_spawn_multiple("DF", AlgoStrategy.f1s)
+		game_map.attempt_spawn_multiple("DF", AlgoStrategy.f1s)
 		game_map.attempt_spawn_multiple("DF", AlgoStrategy.f2s)
 		game_map.attempt_spawn_multiple("EF", AlgoStrategy.f3s)
 		self.deploy_attackers(game_map)
@@ -29,7 +28,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 	def deploy_attackers(self, game_map):
 		#Get some variebles we will use
 		starting_bits = game_map.get_resource('bits')
-		bits_to_spend = random.randint(0, math.floor(starting_bits))
+		bits_to_spend = starting_bits
 		enemy_bits = game_map.get_resource('bits', 1)
 		current_health = game_map.my_integrity
 		enemy_health = game_map.enemy_integrity
