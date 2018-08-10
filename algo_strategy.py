@@ -12,16 +12,16 @@ class AlgoStrategy(gamelib.AlgoCore):
 		gamelib.debug_write('shu config')
 		self.config = config
 
-	wall_locations = [[11,2],[16,2],[0,13],[27,13],[10,3],[17,3],[1,12],[26,12],[9,4],[18,4],[2,11],[25,11],[8,5],[19,5],[3,10],[24,10],[7,6],[20,6],[4,9],[23,9],[6,7],[21,7],[5,8],[22,8]]
+	f1s = [[16,2],[11,2],[27,13],[0,13],[17,3],[10,3],[26,12],[1,12],[18,4],[9,4],[25,11],[2,11],[19,5],[8,5],[24,10],[3,10],[20,6],[7,6],[23,9],[4,9],[21,7],[6,7],[22,8],[5,8]]
+	f2s = [[15,5],[12,5],[17,7],[10,7],[15,9],[12,9],[19,9],[8,9],[17,11],[10,11],[21,11],[6,11],[23,13],[4,13],[19,13],[8,13],[15,13],[12,13]]
 	def step(self, game_map):
 		gamelib.debug_write('shu turn {}'.format(game_map.turn_number))
 		if game_map.turn_number == 0:
-			game_map.attempt_spawn_multiple("DF", [[12,5],[15,5]])
-			game_map.attempt_spawn_multiple("FF", AlgoStrategy.wall_locations)
+			game_map.attempt_spawn_multiple("FF", AlgoStrategy.f1s)
 		else:
-			game_map.attempt_spawn_multiple("DF", AlgoStrategy.wall_locations)
-			game_map.attempt_spawn_multiple("FF", AlgoStrategy.wall_locations)
-		self.build_defences(game_map)
+			game_map.attempt_spawn_multiple("DF", AlgoStrategy.f1s)
+		game_map.attempt_spawn_multiple("DF", AlgoStrategy.f2s)
+#		self.build_defences(game_map)
 		self.deploy_attackers(game_map)
 		game_map.send_messages()
 
