@@ -17,11 +17,10 @@ class AlgoStrategy(gamelib.AlgoCore):
 			game_map.attempt_spawn_multiple("FF", wall)
 		game_map.attempt_spawn_multiple("DF", wall)
 		game_map.attempt_spawn_multiple("DF", [[15,5],[12,5],[17,7],[10,7],[15,9],[12,9],[19,9],[8,9],[17,11],[10,11],[21,11],[6,11],[23,13],[4,13],[15,13],[12,13],[19,13],[8,13]])
-		game_map.attempt_spawn_multiple("EF", [[15,7],[12,7],[17,9],[10,9],[15,11],[12,11],[19,11],[8,11],[17,13],[10,13],[21,13],[6,13]])
+		game_map.attempt_spawn_multiple("EF", [[15,11],[12,11],[19,11],[8,11],[17,13],[10,13],[21,13],[6,13],[17,9],[10,9],[15,7],[12,7]])
 		spawn_location = random.choice([[12,1],[15,1]])
-		while game_map.get_resource("bits") >= 3:
-			game_map.attempt_spawn("EI", spawn_location)
 		while game_map.get_resource("bits") >= 1:
+			game_map.attempt_spawn("EI", spawn_location)
 			game_map.attempt_spawn("SI", spawn_location)
 		game_map.send_messages()
 
