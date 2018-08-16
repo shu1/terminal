@@ -50,7 +50,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 		self.config = config
 
 	def step(self, game_map):
-		gamelib.debug_write("turn {}  health {}".format(game_map.turn_number, game_map.my_integrity))
+		gamelib.debug_write("turn:{} health:{}".format(game_map.turn_number, int(game_map.my_integrity)))
 
 		if game_map.turn_number == 0:
 			for i, loc in enumerate(self.wall_locs):
@@ -87,10 +87,10 @@ class AlgoStrategy(gamelib.AlgoCore):
 				self.mode = 3
 			elif self.sectors[1] > 2 and self.sectors[2] > 2:
 				self.mode = 0
-			gamelib.debug_write("{}  mode {}".format(self.sectors, self.mode))
+			gamelib.debug_write("{} mode:{}".format(self.sectors, self.mode))
 		elif not wall_holes and game_map.my_integrity < self.prev_health:
 			self.mode = 3
-			gamelib.debug_write("{}  mode {}".format(self.sectors, self.mode))
+			gamelib.debug_write("{} mode:{}".format(self.sectors, self.mode))
 		self.prev_health = game_map.my_integrity
 
 		game_map.attempt_spawn_multiple("DF", self.dest_locs[self.mode])
