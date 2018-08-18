@@ -66,7 +66,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 						cores -= game_map.type_cost(fire[0])
 
 		bits = game_map.get_resource("bits")
-		if math.floor(game_map.bits_in_future()) - math.floor(bits) < 2:
+		if math.floor(game_map.bits_in_future()) - math.floor(bits) < 3:	# 2
 			gamelib.debug_write("bits:{}".format(bits))
 
 			for wall in wall_locs:
