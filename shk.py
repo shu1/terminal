@@ -22,7 +22,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
 		filt_locs = [[24,13],[23,12],[22,11],[21,10],[20,9],[19,8],[18,7],[17,6],[16,5],[15,4],[14,3],[13,2],[12,1]]
 		encr_locs = [[25,13],[24,12],[23,11],[22,10],[21,9],[20,8],[19,7],[18,6],[17,5],[16,4],[15,3],[14,2],[13,1]]
-		wall_locs = [
+		offe_locs = [
 			["FF",
 			filt_locs,
 			filt_locs,
@@ -32,7 +32,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 			encr_locs,
 			[[2,13],[3,12],[4,11],[5,10],[6,9],[7,8],[8,7],[9,6],[10,5],[11,4],[12,3],[13,2],[14,1]]]
 		]
-		fire_locs = [
+		defe_locs = [
 			["DF",
 			[[13,13],[14,13],[12,12],[15,12],[13,12],[14,12],[11,11],[16,11],[12,11],[15,11],[13,11],[14,11]],
 			[[0,13],[1,13],[1,12],[2,13],[2,12],[2,11],[3,13],[3,12],[4,13]],
@@ -47,39 +47,39 @@ class AlgoStrategy(gamelib.AlgoCore):
 			for y in range(14,17):
 				if len(game_map.filter_blocked_locations([[12,y],[13,y],[14,y],[15,y]])) == 0:
 					if len(game_map.filter_blocked_locations([[0,14],[1,14]])) == 2:
-						game_map.attempt_remove_multiple(fire_locs[0][self.mode])
-						game_map.attempt_remove_multiple(fire_locs[1][self.mode])
+						game_map.attempt_remove_multiple(defe_locs[0][self.mode])
+						game_map.attempt_remove_multiple(defe_locs[1][self.mode])
 						self.mode = 2
 					elif len(game_map.filter_blocked_locations([[26,14],[27,14]])) == 2:
-						game_map.attempt_remove_multiple(fire_locs[0][self.mode])
-						game_map.attempt_remove_multiple(fire_locs[1][self.mode])
-						game_map.attempt_remove_multiple(wall_locs[0][self.mode])
-						game_map.attempt_remove_multiple(wall_locs[1][self.mode])
+						game_map.attempt_remove_multiple(defe_locs[0][self.mode])
+						game_map.attempt_remove_multiple(defe_locs[1][self.mode])
+						game_map.attempt_remove_multiple(offe_locs[0][self.mode])
+						game_map.attempt_remove_multiple(offe_locs[1][self.mode])
 						self.mode = 3
 					gamelib.debug_write("mode:{}".format(self.mode))
 
-		cores = game_map.get_resource("cores") - len(game_map.filter_blocked_locations(wall_locs[0][self.mode])) * game_map.type_cost(wall_locs[0][0])
-		for fire in fire_locs:
-			for loc in fire[self.mode]:
-				if cores >= game_map.type_cost(fire[0]):
-					if game_map.attempt_spawn(fire[0], loc):
-						cores -= game_map.type_cost(fire[0])
+		cores = game_map.get_resource("cores") - len(game_map.filter_blocked_locations(offe_locs[0][self.mode])) * game_map.type_cost(offe_locs[0][0])
+		for defe in defe_locs:
+			for loc in defe[self.mode]:
+				if cores >= game_map.type_cost(defe[0]):
+					if game_map.attempt_spawn(defe[0], loc):
+						cores -= game_map.type_cost(defe[0])
 
 		bits = game_map.get_resource("bits")
 		if math.floor(game_map.bits_in_future()) - math.floor(bits) < 4:
 			gamelib.debug_write("bits:{}".format(bits))
 
-			for wall in wall_locs:
-				game_map.attempt_spawn_multiple(wall[0], wall[self.mode])
+			for offe in offe_locs:
+				game_map.attempt_spawn_multiple(offe[0], offe[self.mode])
 
 			if self.mode == 3:
-				loc = [14,0]
+				spawn_loc = [14,0]
 			else:
-				loc = [13,0]
+				spawn_loc = [13,0]
 
 			while game_map.get_resource("bits") >= 1:
-				game_map.attempt_spawn("EI", loc)
-				game_map.attempt_spawn("SI", loc)
+				game_map.attempt_spawn("EI", spawn_loc)
+				game_map.attempt_spawn("SI", spawn_loc)
 
 		game_map.send_messages()
 
