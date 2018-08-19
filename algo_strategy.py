@@ -33,7 +33,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 		],[
 		["DF",[[16,5],[11,5],[18,7],[9,7],[16,7],[11,7],[18,9],[9,9],[16,9],[11,9],[16,11],[11,11],[18,11],[9,11],[16,13],[11,13],[18,13],[9,13]]],
 		["FF",[[15,5],[12,5],[15,7],[12,7],[15,9],[12,9],[15,11],[12,11],[15,13],[12,13]]]
-		],]
+		]]
 		encr_locs = [
 			[],
 			[[21,10],[19,8],[17,6],[23,12]],
@@ -42,13 +42,13 @@ class AlgoStrategy(gamelib.AlgoCore):
 		]
 
 		if game_map.turn_number == 0:
-			for i, loc in enumerate(wall_locs):
+			for loc in wall_locs:
 				if game_map.attempt_spawn("FF", loc):
 					self.prev_wall[tuple(loc)] = True
 
 		wall_holes = 0
 		change_mode = False
-		for i, loc in enumerate(wall_locs):
+		for loc in wall_locs:
 			if not game_map.is_blocked(loc):
 				key = tuple(loc)
 				if self.prev_wall[key]:
