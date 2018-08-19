@@ -86,18 +86,22 @@ class AlgoStrategy(gamelib.AlgoCore):
 		game_map.attempt_spawn_multiple(defe[0][0], defe[0][1])
 		if not wall_holes:
 			game_map.attempt_spawn_multiple(defe[1][0], defe[1][1])
-		game_map.attempt_spawn_multiple("EF", encr_locs[self.mode])
 
-		if self.mode == 1:
-			spawn_loc = random.choice([[12,1],[13,0]])
-		elif self.mode == 2:
-			spawn_loc = random.choice([[14,0],[15,1]])
-		else:
-			spawn_loc = random.choice([[12,1],[13,0],[14,0],[15,1]])
+		bits = game_map.get_resource("bits")
+		if math.floor(game_map.bits_in_future()) - math.floor(bits) < 4:
+			gamelib.debug_write("bits:{}".format(bits))
+			game_map.attempt_spawn_multiple("EF", encr_locs[self.mode])
 
-		while game_map.get_resource("bits") >= 1:
-			game_map.attempt_spawn("EI", spawn_loc)
-			game_map.attempt_spawn("SI", spawn_loc)
+			if self.mode == 1:
+				spawn_loc = [13,0]
+			elif self.mode == 2:
+				spawn_loc = [14,0]
+			else:
+				spawn_loc = random.choice([[13,0],[14,0]])
+
+			while game_map.get_resource("bits") >= 1:
+				game_map.attempt_spawn("EI", spawn_loc)
+				game_map.attempt_spawn("SI", spawn_loc)
 
 		game_map.send_messages()
 
