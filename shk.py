@@ -84,7 +84,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 			for offe in offe_locs:
 				game_map.attempt_spawn_multiple(offe[0], offe[self.mode])
 
-			if self.mode == 3:
+			if self.mode == 4:
 				loc = [14,0]
 			else:
 				loc = [13,0]
