@@ -17,9 +17,6 @@ class AlgoStrategy(gamelib.AlgoCore):
 	def step(self, game_map):
 		gamelib.debug_write("turn:{} health:{}".format(game_map.turn_number, int(game_map.my_integrity)))
 
-		if game_map.turn_number == 0:
-			game_map.attempt_spawn_multiple("DF", [[3,13],[24,13],[7,9],[20,9],[11,11],[16,11]])
-
 		defe_locs = [[
 			"DF",
 			[[11,11],[16,11],[12,11],[15,11],[13,11],[14,11],[12,12],[15,12],[13,12],[14,12],[13,13],[14,13]],
@@ -50,7 +47,9 @@ class AlgoStrategy(gamelib.AlgoCore):
 			[[2,13],[3,12],[4,11],[5,10],[6,9],[7,8],[8,7],[9,6],[10,5],[11,4],[12,3],[13,2],[14,1]]
 		]]
 
-		if self.mode == 1:
+		if game_map.turn_number == 0:
+			game_map.attempt_spawn_multiple("DF", [[3,13],[24,13],[7,9],[20,9],[11,11],[16,11]])
+		elif self.mode == 1:
 			if len(game_map.filter_blocked_locations(game_map.get_edge_locations("top_left") + game_map.get_edge_locations("top_right"))) <= 4:
 				for defe in defe_locs:
 					game_map.attempt_remove_multiple(defe[self.mode])
