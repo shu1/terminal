@@ -46,15 +46,15 @@ class AlgoStrategy(gamelib.AlgoCore):
 		if self.mode == 1:
 			for y in range(14,17):
 				if len(game_map.filter_blocked_locations([[12,y],[13,y],[14,y],[15,y]])) == 0:
-					if len(game_map.filter_blocked_locations([[0,14],[1,14]])) == 2:
-						game_map.attempt_remove_multiple(defe_locs[0][self.mode])
-						game_map.attempt_remove_multiple(defe_locs[1][self.mode])
+					if len(game_map.filter_blocked_locations([[26,14],[27,14]])) == 0:
+						for defe in defe_locs:
+							game_map.attempt_remove_multiple(defe[self.mode])
 						self.mode = 2
-					elif len(game_map.filter_blocked_locations([[26,14],[27,14]])) == 2:
-						game_map.attempt_remove_multiple(defe_locs[0][self.mode])
-						game_map.attempt_remove_multiple(defe_locs[1][self.mode])
-						game_map.attempt_remove_multiple(offe_locs[0][self.mode])
-						game_map.attempt_remove_multiple(offe_locs[1][self.mode])
+					elif len(game_map.filter_blocked_locations([[0,14],[1,14]])) == 0:
+						for defe in defe_locs:
+							game_map.attempt_remove_multiple(defe[self.mode])
+						for offe in offe_locs:
+							game_map.attempt_remove_multiple(offe[self.mode])
 						self.mode = 3
 					gamelib.debug_write("mode:{}".format(self.mode))
 
