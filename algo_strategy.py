@@ -44,28 +44,28 @@ class AlgoStrategy(gamelib.AlgoCore):
 				if game_map.attempt_spawn("FF", loc):
 					self.prev_wall[tuple(loc)] = True
 
-		wall_holes = 0
-		change_mode = False
+		hole = 0
+		change = False
 		for loc in wall_locs:
 			if not game_map.is_blocked(loc):
 				key = tuple(loc)
 				if self.prev_wall[key]:
 					if loc[1] <= 5:
 						self.sectors[0] += 1
-						change_mode = True
+						change = True
 					elif loc[1] >= 10:
 						if loc[0] >= 14:
 							self.sectors[1] += 1
 						else:
 							self.sectors[2] += 1
-						change_mode = True
+						change = True
 					self.prev_wall[key] = False
 				if game_map.attempt_spawn("DF", loc):
 					self.prev_wall[key] = True
 				else:
-					wall_holes += 1
+					hole += 1
 
-		if change_mode:
+		if change:
 			if self.sectors[1] > 2 and self.sectors[1] > self.sectors[2] * 2:
 				self.mode = 1
 			elif self.sectors[2] > 2 and self.sectors[2] > self.sectors[1] * 2:
@@ -75,14 +75,14 @@ class AlgoStrategy(gamelib.AlgoCore):
 			elif self.sectors[1] > 2 and self.sectors[2] > 2:
 				self.mode = 0
 			gamelib.debug_write("{} MODE:{}".format(self.sectors, self.mode))
-		elif not wall_holes and game_map.my_integrity < self.prev_health:
+		elif not hole and game_map.my_integrity < self.prev_health:
 			self.mode = 3
 			gamelib.debug_write("{} MODE:{}".format(self.sectors, self.mode))
 		self.prev_health = game_map.my_integrity
 
 		defe = defe_locs[self.mode]
 		game_map.attempt_spawn_multiple(defe[0][0], defe[0][1])
-		if not wall_holes:
+		if not hole:
 			game_map.attempt_spawn_multiple(defe[1][0], defe[1][1])
 
 		if math.floor(game_map.bits_in_future()) - math.floor(game_map.get_resource("bits")) < 4:
