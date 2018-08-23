@@ -8,14 +8,14 @@ class AlgoStrategy(gamelib.AlgoCore):
 		super().__init__()
 		random.seed()
 		gamelib.debug_write("init")
-		self.mode = 0
-		self.prev_health = 30
-		self.prev_wall = {}
-		self.sectors = [0,0,0]
 
 	def process_config(self, config):
 		gamelib.debug_write("config")
 		self.config = config
+		self.mode = 0
+		self.prev_health = 30
+		self.prev_wall = {}
+		self.sectors = [0,0,0]
 
 	def step(self, game_map):
 		gamelib.debug_write("turn:{} health:{}".format(game_map.turn_number, int(game_map.my_integrity)))
@@ -76,10 +76,10 @@ class AlgoStrategy(gamelib.AlgoCore):
 				self.mode = 3
 			elif self.sectors[1] > 2 and self.sectors[2] > 2:
 				self.mode = 0
-			gamelib.debug_write("{} mode:{}".format(self.sectors, self.mode))
+			gamelib.debug_write("{} MODE:{}".format(self.sectors, self.mode))
 		elif not wall_holes and game_map.my_integrity < self.prev_health:
 			self.mode = 3
-			gamelib.debug_write("{} mode:{}".format(self.sectors, self.mode))
+			gamelib.debug_write("{} MODE:{}".format(self.sectors, self.mode))
 		self.prev_health = game_map.my_integrity
 
 		defe = defe_locs[self.mode]
@@ -93,15 +93,15 @@ class AlgoStrategy(gamelib.AlgoCore):
 			game_map.attempt_spawn_multiple("EF", encr_locs[self.mode])
 
 			if self.mode == 1:
-				spawn_loc = [13,0]
+				loc = [13,0]
 			elif self.mode == 2:
-				spawn_loc = [14,0]
+				loc = [14,0]
 			else:
-				spawn_loc = random.choice([[13,0],[14,0]])
+				loc = random.choice([[13,0],[14,0]])
 
 			while game_map.get_resource("bits") >= 1:
-				game_map.attempt_spawn("EI", spawn_loc)
-				game_map.attempt_spawn("SI", spawn_loc)
+				game_map.attempt_spawn("EI", loc)
+				game_map.attempt_spawn("SI", loc)
 
 		game_map.send_messages()
 
