@@ -30,7 +30,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 			["FF",[[11,6],[10,7],[9,8],[8,9],[7,10],[6,11],[5,12],[4,13]]]
 		],[
 			["DF",[[16,5],[11,5],[16,7],[11,7],[16,9],[11,9],[16,11],[11,11],[15,4],[12,4],[15,6],[12,6],[15,8],[12,8],[15,10],[12,10],[15,12],[12,12],[13,11],[14,9],[13,7],[14,5],[13,3],[14,1],[16,3],[11,3]]],
-			["FF",[[15,3],[12,3],[15,5],[12,5],[15,7],[12,7],[15,9],[12,9],[15,11],[12,11]]]
+			["FF",[[15,5],[12,5],[15,7],[12,7],[15,9],[12,9],[15,11],[12,11],[15,3],[12,3]]]
 		]]
 		encr_locs = [
 			[[16,6],[11,6],[16,8],[11,8],[16,10],[11,10],[16,12],[11,12]],
@@ -85,9 +85,8 @@ class AlgoStrategy(gamelib.AlgoCore):
 		if not wall_holes:
 			game_map.attempt_spawn_multiple(defe[1][0], defe[1][1])
 
-		bits = game_map.get_resource("bits")
-		if math.floor(game_map.bits_in_future()) - math.floor(bits) < 4:
-			gamelib.debug_write("turn:{} health:{} bits:{}".format(game_map.turn_number, int(game_map.my_integrity), bits))
+		if math.floor(game_map.bits_in_future()) - math.floor(game_map.get_resource("bits")) < 4:
+			gamelib.debug_write("turn:{} health:{}".format(game_map.turn_number, int(game_map.my_integrity)))
 			game_map.attempt_spawn_multiple("EF", encr_locs[self.mode])
 
 			if self.mode == 1:
