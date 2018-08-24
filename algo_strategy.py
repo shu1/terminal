@@ -35,6 +35,9 @@ class AlgoStrategy(gamelib.AlgoCore):
 		],[
 			["DF",[[0,13],[1,13],[1,12],[2,13],[2,12],[2,11],[3,13],[3,12],[4,13]]],
 			["FF",[[5,13],[4,12],[3,11]]]
+		],[
+			["DF",[[27,13],[26,13],[26,12],[25,13],[25,12],[25,11],[24,13],[24,12],[23,13]]],
+			["FF",[[22,13],[23,12],[24,11]]]
 		]]
 
 		offe_locs = [[
@@ -48,6 +51,9 @@ class AlgoStrategy(gamelib.AlgoCore):
 		],[
 			["FF",[[24,13],[23,12],[22,11],[21,10],[20,9],[19,8],[18,7],[17,6],[16,5],[15,4],[14,3],[13,2],[12,1]]],
 			["EF",[[25,13],[24,12],[23,11],[22,10],[21,9],[20,8],[19,7],[18,6],[17,5],[16,4],[15,3],[14,2],[13,1]]]
+		],[
+			["FF",[[3,13],[4,12],[5,11],[6,10],[7,9],[8,8],[9,7],[10,6],[11,5],[12,4],[13,3],[14,2],[15,1]]],
+			["EF",[[2,13],[3,12],[4,11],[5,10],[6,9],[7,8],[8,7],[9,6],[10,5],[11,4],[12,3],[13,2],[14,1]]]
 		]]
 
 		if game_map.turn_number == 0:
@@ -87,11 +93,15 @@ class AlgoStrategy(gamelib.AlgoCore):
 				elif self.sectors[1] > 2 and self.sectors[2] > 2:
 					self.mode = 0
 
-				if self.mode == 3:
+				if self.mode >= 2:
 					for y in range(14,17):
 						if len(game_map.filter_blocked_locations([[x,y] for x in range(11,17)])) == 0:
-							game_map.attempt_remove_multiple([loc for loc in wall_locs if loc[0] >= 14])
-							self.mode = 4
+							if self.mode == 3:
+								game_map.attempt_remove_multiple([loc for loc in wall_locs if loc[0] >= 14])
+								self.mode = 4
+							else:
+								game_map.attempt_remove_multiple([loc for loc in wall_locs if loc[0] < 14])
+								self.mode = 5
 				gamelib.debug_write("{} MODE:{}".format(self.sectors, self.mode))
 			elif not hole and game_map.my_integrity < self.prev_health:
 				self.mode = 1
@@ -110,7 +120,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
 			if self.mode == 2 or self.mode == 4:
 				loc = [13,0]
-			elif self.mode == 3:
+			elif self.mode == 3 or self.mode == 5:
 				loc = [14,0]
 			else:
 				loc = random.choice([[13,0],[14,0]])
