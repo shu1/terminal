@@ -88,11 +88,10 @@ class AlgoStrategy(gamelib.AlgoCore):
 					self.mode = 0
 
 				if self.mode == 2:
-					for y in range(14,19):
-						if len(game_map.filter_blocked_locations([[10,y],[11,y],[12,y],[13,y],[14,y],[15,y],[16,y],[17,y]])) == 0:
+					for y in range(14,17):
+						if len(game_map.filter_blocked_locations([[x,y] for x in range(11,17)])) == 0:
 							game_map.attempt_remove_multiple(wall_locs)
 							self.mode = 4
-
 				gamelib.debug_write("{} MODE:{}".format(self.sectors, self.mode))
 			elif not hole and game_map.my_integrity < self.prev_health:
 				self.mode = 3
