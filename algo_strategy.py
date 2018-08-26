@@ -75,11 +75,11 @@ class AlgoStrategy(gamelib.AlgoCore):
 					key = tuple(loc)
 					if self.prev_wall[key]:
 						if loc[1] <= 5:
-							self.sectors[0] += 1
+							self.sectors[1] += 1
 							change = True
 						elif loc[1] >= 10:
-							if loc[0] >= 14:
-								self.sectors[1] += 1
+							if loc[0] < 14:
+								self.sectors[0] += 1
 							else:
 								self.sectors[2] += 1
 							change = True
@@ -90,13 +90,13 @@ class AlgoStrategy(gamelib.AlgoCore):
 						hole += 1
 
 			if change:
-				if self.sectors[1] > 2 and self.sectors[1] > self.sectors[2] * 2:
-					self.mode = 2
-				elif self.sectors[2] > 2 and self.sectors[2] > self.sectors[1] * 2:
+				if self.sectors[0] > 2 and self.sectors[0] > self.sectors[2] * 2:
 					self.mode = 3
-				elif self.sectors[0] > 0:
+				elif self.sectors[2] > 2 and self.sectors[2] > self.sectors[0] * 2:
+					self.mode = 2
+				elif self.sectors[1] > 0:
 					self.mode = 1
-				elif self.sectors[1] > 2 and self.sectors[2] > 2:
+				elif self.sectors[0] > 2 and self.sectors[2] > 2:
 					self.mode = 0
 
 				if self.mode == 2 or self.mode == 3:
