@@ -91,8 +91,10 @@ class AlgoStrategy(gamelib.AlgoCore):
 
 			if change:
 				if self.sectors[0] > 2 and self.sectors[0] > self.sectors[2] * 2:
+					game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
 					self.mode = 3
 				elif self.sectors[2] > 2 and self.sectors[2] > self.sectors[0] * 2:
+					game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
 					self.mode = 2
 				elif self.sectors[1] > 0:
 					self.mode = 1
@@ -103,9 +105,11 @@ class AlgoStrategy(gamelib.AlgoCore):
 					for y in range(14,17):
 						if len(game_map.filter_blocked_locations([[x,y] for x in range(11,17)])) == 0:
 							if self.mode == 2:
+								game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
 								game_map.attempt_remove_multiple([loc for loc in wall_locs if loc[0] < 14])
 								self.mode = 5
 							elif self.mode == 3:
+								game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
 								game_map.attempt_remove_multiple([loc for loc in wall_locs if loc[0] >= 14])
 								self.mode = 4
 				gamelib.debug_write("{} MODE:{}".format(self.sectors, self.mode))
@@ -120,7 +124,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 			game_map.attempt_spawn_multiple(defe[1][0], defe[1][1])
 
 		if math.floor(game_map.bits_in_future()) - math.floor(game_map.get_resource("bits")) < 4:
-			gamelib.debug_write("turn:{} health:{} enemy:{}".format(game_map.turn_number, int(game_map.my_integrity), int(game_map.enemy_integrity)))
+			gamelib.debug_write("{} health:{} enemy:{}".format(game_map.turn_number, int(game_map.my_integrity), int(game_map.enemy_integrity)))
 			for offe in offe_locs[self.mode]:
 				game_map.attempt_spawn_multiple(offe[0], offe[1])
 
