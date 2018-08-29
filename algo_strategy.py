@@ -15,6 +15,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 		self.mode = 0
 		self.prev_health = 30
 		self.prev_wall = {}
+		self.paths = [0,0,0]
 		self.sectors = [0,0,0]
 
 	def step(self, game_map):
@@ -66,6 +67,16 @@ class AlgoStrategy(gamelib.AlgoCore):
 			for loc in wall_locs:
 				if game_map.attempt_spawn("FF", loc):
 					self.prev_wall[tuple(loc)] = True
+		else:
+			self.paths[0] += len(game_map.find_path_to_edge([1,13], "top_left")[0])
+			self.paths[2] += len(game_map.find_path_to_edge([26,13], "top_right")[0])
+			left = len(game_map.find_path_to_edge([13,13], "top_left")[0])
+			right = len(game_map.find_path_to_edge([14,13], "top_right")[0])
+			if left < right:
+				self.paths[1] += left
+			else:
+				self.paths[1] += right
+			gamelib.debug_write("paths:{}".format(self.paths))
 
 		hole = 0
 		if self.mode < 4:
@@ -91,27 +102,25 @@ class AlgoStrategy(gamelib.AlgoCore):
 
 			if change:
 				if self.sectors[0] > 2 and self.sectors[0] > self.sectors[2] * 2:
-					game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
-					self.mode = 3
+					if self.paths[0] < self.paths[2] and self.paths[0] < self.paths[1]:
+						game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
+						game_map.attempt_remove_multiple([loc for loc in wall_locs if loc[0] >= 14])
+						self.mode = 4
+					else:
+						game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
+						self.mode = 3
 				elif self.sectors[2] > 2 and self.sectors[2] > self.sectors[0] * 2:
-					game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
-					self.mode = 2
+					if self.paths[2] < self.paths[0] and self.paths[2] < self.paths[1]:
+						game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
+						game_map.attempt_remove_multiple([loc for loc in wall_locs if loc[0] < 14])
+						self.mode = 5
+					else:
+						game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
+						self.mode = 2
 				elif self.sectors[1] > 0:
 					self.mode = 1
 				elif self.sectors[0] > 2 and self.sectors[2] > 2:
 					self.mode = 0
-
-				if self.mode == 2 or self.mode == 3:
-					for y in range(14,17):
-						if len(game_map.filter_blocked_locations([[x,y] for x in range(11,17)])) == 0:
-							if self.mode == 2:
-								game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
-								game_map.attempt_remove_multiple([loc for loc in wall_locs if loc[0] < 14])
-								self.mode = 5
-							elif self.mode == 3:
-								game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
-								game_map.attempt_remove_multiple([loc for loc in wall_locs if loc[0] >= 14])
-								self.mode = 4
 				gamelib.debug_write("{} MODE:{}".format(self.sectors, self.mode))
 			elif not hole and game_map.my_integrity < self.prev_health:
 				self.mode = 1
