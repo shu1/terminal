@@ -55,8 +55,8 @@ class AlgoStrategy(gamelib.AlgoCore):
 			["FF",[[11+i,i] for i in range(13,0,-1)]],
 			["EF",[[12+i,i] for i in range(13,0,-1)]]
 		],[
-			["EF",[[16-i,i] for i in range(13,0,-1)]],
-			["FF",[[15-i,i] for i in range(13,0,-1)]]
+			["FF",[[16-i,i] for i in range(13,0,-1)]],
+			["EF",[[15-i,i] for i in range(13,0,-1)]]
 		]]
 
 	def step(self, game_map):
