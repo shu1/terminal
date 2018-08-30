@@ -59,6 +59,13 @@ class AlgoStrategy(gamelib.AlgoCore):
 			["EF",[[15-i,i] for i in range(13,0,-1)]]
 		]]
 
+	def path(self, game_map, loc, edge):
+		p = game_map.find_path_to_edge(loc, edge)
+		if p[1]:
+			return len(p[0])
+		else:
+			return 28
+
 	def step(self, game_map):
 		hole = 0
 		if game_map.turn_number == 0:
@@ -66,31 +73,14 @@ class AlgoStrategy(gamelib.AlgoCore):
 				if game_map.attempt_spawn("FF", loc):
 					self.prev_wall[tuple(loc)] = True
 		elif self.mode < 4:
-			path = game_map.find_path_to_edge([1,13], "top_left")
-			if path[1]:
-				self.paths[0] += len(path[0])
-			else:
-				self.paths[0] += 28
-			path = game_map.find_path_to_edge([26,13], "top_right")
-			if path[1]:
-				self.paths[2] += len(path[0])
-			else:
-				self.paths[2] += 28
-			path = game_map.find_path_to_edge([13,13], "top_left")
-			if path[1]:
-				left = len(path[0])
-			else:
-				left = 28
-			path = game_map.find_path_to_edge([14,13], "top_right")
-			if path[1]:
-				right = len(path[0])
-			else:
-				right = 28
+			self.paths[0] += self.path(game_map, [1,13], "top_left")
+			self.paths[2] += self.path(game_map, [26,13], "top_right")
+			left = self.path(game_map, [13,13], "top_left")
+			right = self.path(game_map, [14,13], "top_right")
 			if left < right:
 				self.paths[1] += left
 			else:
 				self.paths[1] += right
-			gamelib.debug_write("paths:{}".format(self.paths))
 
 			change = False
 			for loc in self.wall:
@@ -121,6 +111,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 					else:
 						game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
 						self.mode = 3
+					gamelib.debug_write("paths:{}".format(self.paths))
 				elif self.sectors[2] > 2 and self.sectors[2] > self.sectors[0] * 2:
 					if self.paths[2] < self.paths[0] and self.paths[2] < self.paths[1]:
 						game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
@@ -129,6 +120,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 					else:
 						game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
 						self.mode = 2
+					gamelib.debug_write("paths:{}".format(self.paths))
 				elif self.sectors[1] > 0:
 					self.mode = 1
 				elif self.sectors[0] > 2 and self.sectors[2] > 2:
