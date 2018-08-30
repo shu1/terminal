@@ -32,10 +32,10 @@ class AlgoStrategy(gamelib.AlgoCore):
 				   [15,3],[12,3]]]
 		],[
 			["DF",[[16,5],[18,7],[16,7],[18,9],[20,9],[22,11],[20,11],[24,13],[22,13]]],
-			["FF",[[16,6],[17,7],[18,8],[19,9],[20,10],[21,11],[22,12],[23,13]]]	# [[10+i,i] for i in range(6,14)]
+			["FF",[[10+i,i] for i in range(6,14)]]
 		],[
 			["DF",[[11,5],[9,7],[11,7],[9,9],[7,9],[5,11],[7,11],[3,13],[5,13]]],
-			["FF",[[11,6],[10,7],[9,8],[8,9],[7,10],[6,11],[5,12],[4,13]]]			# [[17-i,i] for i in range(6,14)]
+			["FF",[[17-i,i] for i in range(6,14)]]
 		],[
 			["DF",[[0,13],[1,13],[1,12],[2,13],[2,12],[2,11],[3,13],[3,12],[4,13]]],
 			["FF",[[5,13],[4,12],[3,11]]]
@@ -52,11 +52,11 @@ class AlgoStrategy(gamelib.AlgoCore):
 		],[
 			["EF",[[6,10],[8,8],[10,6],[4,12]]]
 		],[
-			["FF",[[24,13],[23,12],[22,11],[21,10],[20,9],[19,8],[18,7],[17,6],[16,5],[15,4],[14,3],[13,2],[12,1]]],	# [[11+i,i] for i in range(13,0,-1)]
-			["EF",[[25,13],[24,12],[23,11],[22,10],[21,9],[20,8],[19,7],[18,6],[17,5],[16,4],[15,3],[14,2],[13,1]]]		# [[12+i,i] for i in range(13,0,-1)]
+			["FF",[[11+i,i] for i in range(13,0,-1)]],
+			["EF",[[12+i,i] for i in range(13,0,-1)]]
 		],[
-			["FF",[[3,13],[4,12],[5,11],[6,10],[7,9],[8,8],[9,7],[10,6],[11,5],[12,4],[13,3],[14,2],[15,1]]],	# [[15-i,i] for i in range(13,0,-1)]
-			["EF",[[2,13],[3,12],[4,11],[5,10],[6,9],[7,8],[8,7],[9,6],[10,5],[11,4],[12,3],[13,2],[14,1]]]		# [[16-i,i] for i in range(13,0,-1)]
+			["EF",[[16-i,i] for i in range(13,0,-1)]],
+			["FF",[[15-i,i] for i in range(13,0,-1)]]
 		]]
 
 	def step(self, game_map):
@@ -101,7 +101,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 				if self.sectors[0] > 2 and self.sectors[0] > self.sectors[2] * 2:
 					if self.paths[0] < self.paths[2] and self.paths[0] < self.paths[1]:
 						game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
-						game_map.attempt_remove_multiple([loc for loc in self.wall if loc[0] >= 14])
+						game_map.attempt_remove_multiple(game_map.get_edge_locations("bottom_right"))
 						self.mode = 4
 					else:
 						game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
@@ -109,7 +109,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 				elif self.sectors[2] > 2 and self.sectors[2] > self.sectors[0] * 2:
 					if self.paths[2] < self.paths[0] and self.paths[2] < self.paths[1]:
 						game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
-						game_map.attempt_remove_multiple([loc for loc in self.wall if loc[0] < 14])
+						game_map.attempt_remove_multiple(game_map.get_edge_locations("bottom_left"))
 						self.mode = 5
 					else:
 						game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
