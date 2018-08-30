@@ -17,12 +17,9 @@ class AlgoStrategy(gamelib.AlgoCore):
 		self.prev_wall = {}
 		self.paths = [0,0,0]
 		self.sectors = [0,0,0]
-
-	def step(self, game_map):
-#		wall_locs = [[14+i,i],[13-i,i] for i in range(13,1,-1)]
-		wall_locs = [[27,13],[0,13],[26,12],[1,12],[25,11],[2,11],[24,10],[3,10],[23,9],[4,9],[22,8],[5,8],[21,7],[6,7],[20,6],[7,6],[19,5],[8,5],[18,4],[9,4],[17,3],[10,3],[16,2],[11,2]]
-
-		defe_locs = [[
+#		self.wall = [[14+i,i],[13-i,i] for i in range(13,1,-1)]
+		self.wall = [[27,13],[0,13],[26,12],[1,12],[25,11],[2,11],[24,10],[3,10],[23,9],[4,9],[22,8],[5,8],[21,7],[6,7],[20,6],[7,6],[19,5],[8,5],[18,4],[9,4],[17,3],[10,3],[16,2],[11,2]]
+		self.defe = [[
 			["DF",[[16,5],[11,5],[18,7],[9,7],[16,9],[11,9],[20,9],[7,9],[18,11],[9,11],[22,11],[5,11],[16,13],[11,13],[24,13],[3,13],[20,13],[7,13],
 				   [16,7],[11,7],[18,9],[9,9],[16,11],[11,11],[20,11],[7,11],[18,13],[9,13],[22,13],[5,13]]],
 			["FF",[[15,5],[12,5],[15,7],[12,7],[15,9],[12,9],[15,11],[12,11],[15,13],[12,13]]]	# [[15,i],[12,i] for i in range(5,15,2)]
@@ -46,8 +43,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 			["DF",[[27,13],[26,13],[26,12],[25,13],[25,12],[25,11],[24,13],[24,12],[23,13]]],
 			["FF",[[22,13],[23,12],[24,11]]]
 		]]
-
-		offe_locs = [[
+		self.offe = [[
 			["EF",[[16,6],[11,6],[16,8],[11,8],[16,10],[11,10],[16,12],[11,12]]]				# [[16,i],[11,i] for i in range(6,14,2)]
 		],[
 			["EF",[[16,4],[11,4],[16,6],[11,6],[16,8],[11,8],[16,10],[11,10],[16,12],[11,12]]]	# [[16,i],[11,i] for i in range(4,14,2)]
@@ -63,8 +59,9 @@ class AlgoStrategy(gamelib.AlgoCore):
 			["EF",[[2,13],[3,12],[4,11],[5,10],[6,9],[7,8],[8,7],[9,6],[10,5],[11,4],[12,3],[13,2],[14,1]]]		# [[16-i,i] for i in range(13,0,-1)]
 		]]
 
+	def step(self, game_map):
 		if game_map.turn_number == 0:
-			for loc in wall_locs:
+			for loc in self.wall:
 				if game_map.attempt_spawn("FF", loc):
 					self.prev_wall[tuple(loc)] = True
 		else:
@@ -81,7 +78,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 		hole = 0
 		if self.mode < 4:
 			change = False
-			for loc in wall_locs:
+			for loc in self.wall:
 				if not game_map.is_blocked(loc):
 					key = tuple(loc)
 					if self.prev_wall[key]:
@@ -104,7 +101,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 				if self.sectors[0] > 2 and self.sectors[0] > self.sectors[2] * 2:
 					if self.paths[0] < self.paths[2] and self.paths[0] < self.paths[1]:
 						game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
-						game_map.attempt_remove_multiple([loc for loc in wall_locs if loc[0] >= 14])
+						game_map.attempt_remove_multiple([loc for loc in self.wall if loc[0] >= 14])
 						self.mode = 4
 					else:
 						game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
@@ -112,7 +109,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 				elif self.sectors[2] > 2 and self.sectors[2] > self.sectors[0] * 2:
 					if self.paths[2] < self.paths[0] and self.paths[2] < self.paths[1]:
 						game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
-						game_map.attempt_remove_multiple([loc for loc in wall_locs if loc[0] < 14])
+						game_map.attempt_remove_multiple([loc for loc in self.wall if loc[0] < 14])
 						self.mode = 5
 					else:
 						game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
@@ -127,14 +124,14 @@ class AlgoStrategy(gamelib.AlgoCore):
 				gamelib.debug_write("{} MODE:{}".format(self.sectors, self.mode))
 			self.prev_health = game_map.my_integrity
 
-		defe = defe_locs[self.mode]
+		defe = self.defe[self.mode]
 		game_map.attempt_spawn_multiple(defe[0][0], defe[0][1])
 		if not hole:
 			game_map.attempt_spawn_multiple(defe[1][0], defe[1][1])
 
 		if math.floor(game_map.bits_in_future()) - math.floor(game_map.get_resource("bits")) < 4:
 			gamelib.debug_write("{} health:{} enemy:{}".format(game_map.turn_number, int(game_map.my_integrity), int(game_map.enemy_integrity)))
-			for offe in offe_locs[self.mode]:
+			for offe in self.offe[self.mode]:
 				game_map.attempt_spawn_multiple(offe[0], offe[1])
 
 			if self.mode == 2 or self.mode == 4:
