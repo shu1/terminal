@@ -60,11 +60,12 @@ class AlgoStrategy(gamelib.AlgoCore):
 		]]
 
 	def step(self, game_map):
+		hole = 0
 		if game_map.turn_number == 0:
 			for loc in self.wall:
 				if game_map.attempt_spawn("FF", loc):
 					self.prev_wall[tuple(loc)] = True
-		else:
+		elif self.mode < 4:
 			self.paths[0] += len(game_map.find_path_to_edge([1,13], "top_left")[0])
 			self.paths[2] += len(game_map.find_path_to_edge([26,13], "top_right")[0])
 			left = len(game_map.find_path_to_edge([13,13], "top_left")[0])
@@ -75,8 +76,6 @@ class AlgoStrategy(gamelib.AlgoCore):
 				self.paths[1] += right
 			gamelib.debug_write("paths:{}".format(self.paths))
 
-		hole = 0
-		if self.mode < 4:
 			change = False
 			for loc in self.wall:
 				if not game_map.is_blocked(loc):
