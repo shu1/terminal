@@ -66,10 +66,26 @@ class AlgoStrategy(gamelib.AlgoCore):
 				if game_map.attempt_spawn("FF", loc):
 					self.prev_wall[tuple(loc)] = True
 		elif self.mode < 4:
-			self.paths[0] += len(game_map.find_path_to_edge([1,13], "top_left")[0])
-			self.paths[2] += len(game_map.find_path_to_edge([26,13], "top_right")[0])
-			left = len(game_map.find_path_to_edge([13,13], "top_left")[0])
-			right = len(game_map.find_path_to_edge([14,13], "top_right")[0])
+			path = game_map.find_path_to_edge([1,13], "top_left")
+			if path[1]:
+				self.paths[0] += len(path[0])
+			else:
+				self.paths[0] += 28
+			path = game_map.find_path_to_edge([26,13], "top_right")
+			if path[1]:
+				self.paths[2] += len(path[0])
+			else:
+				self.paths[2] += 28
+			path = game_map.find_path_to_edge([13,13], "top_left")
+			if path[1]:
+				left = len(path[0])
+			else:
+				left = 28
+			path = game_map.find_path_to_edge([14,13], "top_right")
+			if path[1]:
+				right = len(path[0])
+			else:
+				right = 28
 			if left < right:
 				self.paths[1] += left
 			else:
