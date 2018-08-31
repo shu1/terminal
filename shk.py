@@ -8,15 +8,13 @@ class AlgoStrategy(gamelib.AlgoCore):
 		super().__init__()
 		random.seed()
 		gamelib.debug_write("init")
-		self.mode = 1	# hounddog
 
 	def process_config(self, config):
 		gamelib.debug_write("config")
 		self.config = config
+		self.mode = 1	# hounddog
 
 	def step(self, game_map):
-		gamelib.debug_write("turn:{} health:{}".format(game_map.turn_number, int(game_map.my_integrity)))
-
 		wall_locs = [[0,13],[1,12],[2,11],[3,10],[4,9],[5,8],[6,7],[7,6],[8,5],[9,4],[10,3],[11,2]]
 		defe_locs = [[
 			"DF",
@@ -63,7 +61,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 					for defe in defe_locs:
 						game_map.attempt_remove_multiple(defe[self.mode])
 					self.mode = 2 # specter
-					gamelib.debug_write("mode:{}".format(self.mode))
+					gamelib.debug_write("MODE:{}".format(self.mode))
 				else:
 					for y in range(14,17):
 						if len(game_map.filter_blocked_locations([[12,y],[13,y],[14,y],[15,y]])) == 0:
@@ -105,9 +103,8 @@ class AlgoStrategy(gamelib.AlgoCore):
 					if game_map.attempt_spawn(defe[0], loc):
 						cores -= game_map.type_cost(defe[0])
 
-		bits = game_map.get_resource("bits")
-		if math.floor(game_map.bits_in_future()) - math.floor(bits) < 4:
-			gamelib.debug_write("bits:{}".format(bits))
+		if math.floor(game_map.bits_in_future()) - math.floor(game_map.get_resource("bits")) < 4:
+			gamelib.debug_write("{} health:{} enemy:{}".format(game_map.turn_number, int(game_map.my_integrity), int(game_map.enemy_integrity)))
 
 			for offe in offe_locs:
 				game_map.attempt_spawn_multiple(offe[0], offe[self.mode])
