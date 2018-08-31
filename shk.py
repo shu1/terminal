@@ -63,36 +63,40 @@ class AlgoStrategy(gamelib.AlgoCore):
 					self.mode = 2 # specter
 					gamelib.debug_write("MODE:{}".format(self.mode))
 				else:
-					for y in range(14,17):
-						if len(game_map.filter_blocked_locations([[12,y],[13,y],[14,y],[15,y]])) == 0:
-							if len(game_map.filter_blocked_locations([[26,14],[27,14]])) == 0:
-								for defe in defe_locs:
-									game_map.attempt_remove_multiple(defe[self.mode])
-								self.mode = 3	# starfish
-							elif len(game_map.filter_blocked_locations([[0,14],[1,14]])) == 0:
-								for defe in defe_locs:
-									game_map.attempt_remove_multiple(defe[self.mode])
-								for offe in offe_locs:
-									game_map.attempt_remove_multiple(offe[self.mode])
-								self.mode = 4	# champ
-							gamelib.debug_write("mode:{}".format(self.mode))
+					x = 14
+					paths = [14,13,15,12,16,11,17,10,18,9,19,8,20,7,21,6,22,5,23,4,24,3,25,2,26,1,27,0]
+					for i in [14,13,15,12,16,11,17,10,18,9,19,8,20,7,21,6,22,5,23,4,24,3,25,2,26,1,27,0]:
+						if i < 14:
+							j = 13
+						else:
+							j = 14
+						paths[i] = len(game_map.find_path_to_location([i,13], [j,27], 0)[0])
+						if paths[i] < paths[x]:
+							x = i
 
-			if self.mode == 1:
-				i = 14
-				s = 999
-				for x in [14,13,15,12,16,11,17,10,18,9,19,8,20,7,21,6,22,5,23,4,24,3,25,2,26,1,27,0]:
-					l = len(game_map.find_path_to_location([x,13], [13,27], 0)[0])
-					r = len(game_map.find_path_to_location([x,13], [14,27], 0)[0])
-					if r < l:
-						l = r
-					if l < s:
-						s = l
-						i = x
-				offset = i - 14
-				if offset > 5:
-					offset = 5
-				elif offset < -8:
-					offset = -8
+					xs = []
+					for i in range(0,28):
+						if paths[i] == paths[x]:
+							xs.append(i)
+					gamelib.debug_write("{} {} {}".format(paths, paths[x], xs))
+
+					if x < 5:
+						for defe in defe_locs:
+							game_map.attempt_remove_multiple(defe[self.mode])
+						self.mode = 3	# starfish
+						gamelib.debug_write("MODE:{}".format(self.mode))
+					elif x > 22:
+						for defe in defe_locs:
+							game_map.attempt_remove_multiple(defe[self.mode])
+						for offe in offe_locs:
+							game_map.attempt_remove_multiple(offe[self.mode])
+						game_map.attempt_remove_multiple([[2,12],[3,12],[3,11],[4,11]])
+						self.mode = 4	# champ
+						gamelib.debug_write("MODE:{}".format(self.mode))
+					else:
+						offset = x - 14
+						if offset > 5:
+							offset = 5
 
 			cores = game_map.get_resource("cores") - len(game_map.filter_blocked_locations(offe_locs[0][self.mode])) * 1.5
 			for i, defe in enumerate(defe_locs):
