@@ -13,8 +13,6 @@ class AlgoStrategy(gamelib.AlgoCore):
 		gamelib.debug_write("config")
 		self.config = config
 		self.mode = 1	# hounddog
-
-		wall_locs = [[13-i,i] for i in range(13,1,-1)]
 		self.defe = [[
 			"DF",
 			[[11,11],[16,11],[12,11],[15,11],[13,11],[14,11],[12,12],[15,12],[13,12],[14,12],[13,13],[14,13]],
@@ -29,25 +27,22 @@ class AlgoStrategy(gamelib.AlgoCore):
 			[[22,13],[23,12],[24,11]]
 		],[
 			"FF",
-			wall_locs,
-			wall_locs,
+			[[13-i,i] for i in range(13,1,-1)],
+			[[13-i,i] for i in range(13,1,-1)],
 			[],
 			[]
 		]]
-
-		filt_locs = [[11+i,i] for i in range(13,0,-1)]
-		encr_locs = [[12+i,i] for i in range(13,0,-1)]
 		self.offe = [[
 			"FF",
-			filt_locs,
-			filt_locs,
-			filt_locs,
+			[[11+i,i] for i in range(13,0,-1)],
+			[[11+i,i] for i in range(13,0,-1)],
+			[[11+i,i] for i in range(13,0,-1)],
 			[[16-i,i] for i in range(13,0,-1)]
 		],[
 			"EF",
-			encr_locs,
-			encr_locs,
-			encr_locs,
+			[[12+i,i] for i in range(13,0,-1)],
+			[[12+i,i] for i in range(13,0,-1)],
+			[[12+i,i] for i in range(13,0,-1)],
 			[[15-i,i] for i in range(13,0,-1)]
 		]]
 
