@@ -13,6 +13,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 		gamelib.debug_write("config")
 		self.config = config
 		self.mode = 1	# hounddog
+		self.paths = [0 for i in range(28)]
 		self.defe = [[
 			"DF",
 			[[11,11],[16,11],[12,11],[15,11],[13,11],[14,11],[12,12],[15,12],[13,12],[14,12],[13,13],[14,13]],
@@ -52,25 +53,24 @@ class AlgoStrategy(gamelib.AlgoCore):
 		else:
 			offset = 0
 			if self.mode == 1:
-				if len(game_map.filter_blocked_locations(game_map.get_edge_locations("top_left") + game_map.get_edge_locations("top_right"))) <= 4:
+				if len(game_map.filter_blocked_locations(game_map.get_edge_locations("top_left") + game_map.get_edge_locations("top_right"))) <= 2:
 					for defe in self.defe:
 						game_map.attempt_remove_multiple(defe[self.mode])
 					self.mode = 2 # specter
 					gamelib.debug_write("MODE:{}".format(self.mode))
 				else:
 					x = 14
-					paths = [14,13,15,12,16,11,17,10,18,9,19,8,20,7,21,6,22,5,23,4,24,3,25,2,26,1,27,0]
 					for i in [14,13,15,12,16,11,17,10,18,9,19,8,20,7,21,6,22,5,23,4,24,3,25,2,26,1,27,0]:
 						j = 13 if i < 14 else 14
-						paths[i] = len(game_map.find_path_to_location([i,13], [j,27], 0)[0])
-						if paths[i] < paths[x]:
+						self.paths[i] += len(game_map.find_path_to_location([i,13], [j,27], 0)[0])
+						if self.paths[i] < self.paths[x]:
 							x = i
 
 					xs = []
-					for i in range(0,28):
-						if paths[i] == paths[x]:
+					for i in range(28):
+						if self.paths[i] <= self.paths[x]:
 							xs.append(i)
-					gamelib.debug_write("{} {} {}".format(paths, paths[x], xs))
+					gamelib.debug_write("{} {} {}".format(self.paths, self.paths[x], xs))
 
 					if x < 5:
 						for defe in self.defe:
