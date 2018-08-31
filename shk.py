@@ -52,10 +52,10 @@ class AlgoStrategy(gamelib.AlgoCore):
 			[[2,13],[3,12],[4,11],[5,10],[6,9],[7,8],[8,7],[9,6],[10,5],[11,4],[12,3],[13,2],[14,1]]
 		]]
 
-		offset = 0
 		if game_map.turn_number == 0:
 			game_map.attempt_spawn_multiple("DF", [[3,13],[24,13],[7,9],[20,9],[11,11],[16,11]])
 		else:
+			offset = 0
 			if self.mode == 1:
 				if len(game_map.filter_blocked_locations(game_map.get_edge_locations("top_left") + game_map.get_edge_locations("top_right"))) <= 4:
 					for defe in defe_locs:
@@ -94,20 +94,21 @@ class AlgoStrategy(gamelib.AlgoCore):
 				elif offset < -8:
 					offset = -8
 
-		cores = game_map.get_resource("cores") - len(game_map.filter_blocked_locations(offe_locs[0][self.mode])) * 1.5
-		for i, defe in enumerate(defe_locs):
-			for loc in defe[self.mode]:
-				if cores >= game_map.type_cost(defe[0]):
-					if self.mode == 1 and i < 2:
-						loc = [loc[0] + offset, loc[1]]
-					if game_map.attempt_spawn(defe[0], loc):
-						cores -= game_map.type_cost(defe[0])
+			cores = game_map.get_resource("cores") - len(game_map.filter_blocked_locations(offe_locs[0][self.mode])) * 1.5
+			for i, defe in enumerate(defe_locs):
+				for loc in defe[self.mode]:
+					if cores >= game_map.type_cost(defe[0]):
+						if self.mode == 1 and i < 2:	# floating island
+							loc = [loc[0] + offset, loc[1]]
+						if game_map.attempt_spawn(defe[0], loc):
+							cores -= game_map.type_cost(defe[0])
 
 		if math.floor(game_map.bits_in_future()) - math.floor(game_map.get_resource("bits")) < 4:
 			gamelib.debug_write("{} health:{} enemy:{}".format(game_map.turn_number, int(game_map.my_integrity), int(game_map.enemy_integrity)))
 
-			for offe in offe_locs:
-				game_map.attempt_spawn_multiple(offe[0], offe[self.mode])
+			if game_map.turn_number > 0:
+				for offe in offe_locs:
+					game_map.attempt_spawn_multiple(offe[0], offe[self.mode])
 
 			if self.mode == 4:
 				loc = [14,0]
