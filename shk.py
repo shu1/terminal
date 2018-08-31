@@ -66,10 +66,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 					x = 14
 					paths = [14,13,15,12,16,11,17,10,18,9,19,8,20,7,21,6,22,5,23,4,24,3,25,2,26,1,27,0]
 					for i in [14,13,15,12,16,11,17,10,18,9,19,8,20,7,21,6,22,5,23,4,24,3,25,2,26,1,27,0]:
-						if i < 14:
-							j = 13
-						else:
-							j = 14
+						j = 13 if i < 14 else 14
 						paths[i] = len(game_map.find_path_to_location([i,13], [j,27], 0)[0])
 						if paths[i] < paths[x]:
 							x = i
@@ -114,11 +111,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 				for offe in offe_locs:
 					game_map.attempt_spawn_multiple(offe[0], offe[self.mode])
 
-			if self.mode == 4:
-				loc = [14,0]
-			else:
-				loc = [13,0]
-
+			loc = [14,0] if self.mode == 4 else [13,0]
 			while game_map.get_resource("bits") >= 1:
 				game_map.attempt_spawn("EI", loc)
 				game_map.attempt_spawn("SI", loc)
