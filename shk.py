@@ -67,6 +67,8 @@ class AlgoStrategy(gamelib.AlgoCore):
 					for i in [14,13,15,12,16,11,17,10,18,9,19,8,20,7,21,6,22,5,23,4,24,3,25,2,26,1,27,0]:
 						j = 13 if i < 14 else 14
 						self.paths[i] += len(copy.find_path_to_location([i,13], [j,27], 0)[0])
+						if game_map.turn_number > 1:
+							self.paths[i] /= 2
 						if self.paths[i] < self.paths[x]:
 							x = i
 
