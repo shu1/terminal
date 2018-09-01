@@ -59,10 +59,14 @@ class AlgoStrategy(gamelib.AlgoCore):
 					self.mode = 2 # specter
 					gamelib.debug_write("MODE:{}".format(self.mode))
 				else:
+					copy = game_map.get_map_copy()
+					for loc in [[i,13] for i in range(28)]:
+						copy.clear_units_from_map_location(loc)
+
 					x = 14
 					for i in [14,13,15,12,16,11,17,10,18,9,19,8,20,7,21,6,22,5,23,4,24,3,25,2,26,1,27,0]:
 						j = 13 if i < 14 else 14
-						self.paths[i] += len(game_map.find_path_to_location([i,13], [j,27], 0)[0])
+						self.paths[i] += len(copy.find_path_to_location([i,13], [j,27], 0)[0])
 						if self.paths[i] < self.paths[x]:
 							x = i
 
