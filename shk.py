@@ -78,12 +78,12 @@ class AlgoStrategy(gamelib.AlgoCore):
 							xs.append(i)
 					gamelib.debug_write("{} {} {}".format(self.paths, self.paths[x], xs))
 
-					if x < 5:
+					if x < 3:
 						for defe in self.defe:
 							game_map.attempt_remove_multiple(defe[self.mode])
 						self.mode = 3	# starfish
 						gamelib.debug_write("MODE:{}".format(self.mode))
-					elif x > 22:
+					elif x > 24:
 						for defe in self.defe:
 							game_map.attempt_remove_multiple(defe[self.mode])
 						for offe in self.offe:
