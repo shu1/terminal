@@ -7,11 +7,6 @@ class AlgoStrategy(gamelib.AlgoCore):
 	def __init__(self):
 		super().__init__()
 		random.seed()
-		gamelib.debug_write("init")
-
-	def process_config(self, config):
-		gamelib.debug_write("config")
-		self.config = config
 		self.mode = 1	# hounddog
 		self.paths = [0 for i in range(28)]
 		self.defe = [[
@@ -46,6 +41,9 @@ class AlgoStrategy(gamelib.AlgoCore):
 			[[12+i,i] for i in range(13,0,-1)],
 			[[15-i,i] for i in range(13,0,-1)]
 		]]
+
+	def process_config(self, config):
+		self.config = config
 
 	def step(self, game_map):
 		if game_map.turn_number == 0:
