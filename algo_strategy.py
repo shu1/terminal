@@ -7,11 +7,6 @@ class AlgoStrategy(gamelib.AlgoCore):
 	def __init__(self):
 		super().__init__()
 		random.seed()
-		gamelib.debug_write("init")
-
-	def process_config(self, config):
-		gamelib.debug_write("config")
-		self.config = config
 		self.mode = 0
 		self.prev_health = 30
 		self.prev_wall = {}
@@ -58,6 +53,8 @@ class AlgoStrategy(gamelib.AlgoCore):
 			["EF",[[15-i,i] for i in range(13,0,-1)]]
 		]]
 
+	def process_config(self, config):
+		self.config = config
 
 	def step(self, game_map):
 		hole = 0
