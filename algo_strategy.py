@@ -58,12 +58,6 @@ class AlgoStrategy(gamelib.AlgoCore):
 			["EF",[[15-i,i] for i in range(13,0,-1)]]
 		]]
 
-	def path(self, game_map, loc, edge):
-		p = game_map.find_path_to_edge(loc, edge)
-		if p[1]:
-			return len(p[0])
-		else:
-			return 28
 
 	def step(self, game_map):
 		hole = 0
@@ -72,14 +66,15 @@ class AlgoStrategy(gamelib.AlgoCore):
 				if game_map.attempt_spawn("FF", loc):
 					self.prev_wall[tuple(loc)] = True
 		elif self.mode < 4:
-			self.paths[0] += self.path(game_map, [1,13], "top_left")
-			self.paths[2] += self.path(game_map, [26,13], "top_right")
-			left = self.path(game_map, [13,13], "top_left")
-			right = self.path(game_map, [14,13], "top_right")
-			if left < right:
-				self.paths[1] += left
-			else:
-				self.paths[1] += right
+			path = game_map.find_path_to_edge([1,13], "top_left")
+			self.paths[0] += len(path[0]) if path[1] else 28
+			path = game_map.find_path_to_edge([26,13], "top_right")
+			self.paths[2] += len(path[0]) if path[1] else 28
+			path = game_map.find_path_to_edge([13,13], "top_left")
+			left = len(path[0]) if path[1] else 28
+			path = game_map.find_path_to_edge([14,13], "top_right")
+			right = len(path[0]) if path[1] else 28
+			self.paths[1] += left if left < right else right
 
 			change = False
 			for loc in self.wall:
