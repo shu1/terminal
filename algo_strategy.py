@@ -10,7 +10,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 		self.mode = 0
 		self.prev_health = 30
 		self.prev_wall = {}
-		self.paths = [0,0,0]
+		self.paths = [0,0,0,0,0]
 		self.sectors = [0,0,0]
 		self.wall = [[27,13],[0,13],[26,12],[1,12],[25,11],[2,11],[24,10],[3,10],[23,9],[4,9],[22,8],[5,8],[21,7],[6,7],[20,6],[7,6],[19,5],[8,5],[18,4],[9,4],[17,3],[10,3],[16,2],[11,2]]
 		self.defe = [[
@@ -65,13 +65,17 @@ class AlgoStrategy(gamelib.AlgoCore):
 		elif self.mode < 4:
 			path = game_map.find_path_to_edge([1,13], "top_left")
 			self.paths[0] += len(path[0]) if path[1] else 28
-			path = game_map.find_path_to_edge([26,13], "top_right")
-			self.paths[2] += len(path[0]) if path[1] else 28
+			path = game_map.find_path_to_edge([4,13], "top_left")
+			self.paths[1] += len(path[0]) if path[1] else 28
 			path = game_map.find_path_to_edge([13,13], "top_left")
 			left = len(path[0]) if path[1] else 28
 			path = game_map.find_path_to_edge([14,13], "top_right")
 			right = len(path[0]) if path[1] else 28
-			self.paths[1] += left if left < right else right
+			self.paths[2] += left if left < right else right
+			path = game_map.find_path_to_edge([23,13], "top_right")
+			self.paths[3] += len(path[0]) if path[1] else 28
+			path = game_map.find_path_to_edge([26,13], "top_right")
+			self.paths[4] += len(path[0]) if path[1] else 28
 
 			change = False
 			for loc in self.wall:
@@ -95,7 +99,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
 			if change:
 				if self.sectors[0] > 2 and self.sectors[0] > self.sectors[2] * 2:
-					if self.paths[0] < self.paths[2] and self.paths[0] < self.paths[1]:
+					if self.paths[0] < self.paths[1] and self.paths[0] < self.paths[2] and self.paths[0] < self.paths[3] and self.paths[0] < self.paths[4]:
 						game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
 						game_map.attempt_remove_multiple(game_map.get_edge_locations("bottom_right"))
 						self.mode = 4
@@ -104,7 +108,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 						self.mode = 3
 					gamelib.debug_write("paths:{}".format(self.paths))
 				elif self.sectors[2] > 2 and self.sectors[2] > self.sectors[0] * 2:
-					if self.paths[2] < self.paths[0] and self.paths[2] < self.paths[1]:
+					if self.paths[4] < self.paths[0] and self.paths[4] < self.paths[1] and self.paths[4] < self.paths[2] and self.paths[4] < self.paths[3]:
 						game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
 						game_map.attempt_remove_multiple(game_map.get_edge_locations("bottom_left"))
 						self.mode = 5
