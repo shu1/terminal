@@ -99,7 +99,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
 			if change:
 				if self.sectors[0] > 2 and self.sectors[0] > self.sectors[2] * 2:
-					if self.paths[0] < self.paths[1] and self.paths[0] < self.paths[2] and self.paths[0] < self.paths[3] and self.paths[0] < self.paths[4]:
+					if self.paths[0] < self.paths[1] < self.paths[2] < self.paths[3] < self.paths[4]:
 						game_map.attempt_remove_multiple([[14,1],[15,3],[16,3],[16,4]])
 						game_map.attempt_remove_multiple(game_map.get_edge_locations("bottom_right"))
 						self.mode = 4
@@ -108,7 +108,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 						self.mode = 3
 					gamelib.debug_write("paths:{}".format(self.paths))
 				elif self.sectors[2] > 2 and self.sectors[2] > self.sectors[0] * 2:
-					if self.paths[4] < self.paths[0] and self.paths[4] < self.paths[1] and self.paths[4] < self.paths[2] and self.paths[4] < self.paths[3]:
+					if self.paths[4] < self.paths[3] < self.paths[2] < self.paths[1] < self.paths[0]:
 						game_map.attempt_remove_multiple([[14,1],[12,3],[11,3],[11,4]])
 						game_map.attempt_remove_multiple(game_map.get_edge_locations("bottom_left"))
 						self.mode = 5
